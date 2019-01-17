@@ -45,12 +45,33 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             }
         });
 
+        viewModel.getIsLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+
+                if (aBoolean){
+                    showProgressBar();
+                }else{
+                    hideProgressBar();
+                    recyclerView.smoothScrollToPosition(viewModel.getNicePlaces().getValue().size()-1);
+                }
+            }
+        });
+
+
         initRecyclerView();
     }
 
     private void initFloatingActionButton() {
 
         floatingActionButton = findViewById(R.id.float_button);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                viewModel.addNewNicePlace(new NicePlace("pincushion","http://services.hanselandpetal.com/photos/pincushion.jpg"));
+            }
+        });
     }
 
     private void initRecyclerView() {
